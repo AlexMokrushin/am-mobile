@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
+<button class="switch">On / Off</button>
+<h2>
+Console output
+</h2>
+<div id="console">
+
+</div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <script>
+  //have a console on mobile
+const consoleOutput = document.getElementById("console");
+const log = function (msg) {
+  consoleOutput.innerText = `${consoleOutput.innerText}\n${msg}`;
+  console.log(msg);
+}
+
+//Test browser support
+const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
+
+if (SUPPORTS_MEDIA_DEVICES) {
+  //Test browser support
+        if (!('mediaDevices' in window.navigator)) {
+            alert("Media Devices not available. Use HTTPS!");
+        };
+
+        //Get the environment camera (usually the second one)
+        window.navigator.mediaDevices.enumerateDevices().then((devices) => {
+
+            const cameras = devices.filter((device) => device.kind === 'videoinput');
+            if (cameras.length === 0) {
+                alert("No camera found. If your device has camera available, check permissions.");
+            };
+            
+            const camera = cameras[cameras.length - 1];
+            
+            window.navigator.mediaDevices.getUserMedia({
+                video: {
+                    deviceId: camera.deviceId
+                }
+            }).then((stream) => {
+                this.track = stream.getVideoTracks()[0];
+                
+                if (!(this.track.getCapabilities().torch)) {
+                    alert("No torch available.");
+                }; 
+            });
+        });
+          let torch = false;
+          const btn = document.querySelector('.switch');
+      
+          btn.addEventListener('click', function (e) {
+            try {
+              track.applyConstraints({
+                advanced: [{
+                  torch: (torch = !torch)
+                }]
+              });
+            } catch (err) {
+              log(err);
+            }
+          });
+  //The light will be on as long the track exists
+}
+</script>
+</body>
+</html>
